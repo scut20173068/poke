@@ -25,9 +25,11 @@ class FoodListTableViewController: UITableViewController {
         
     }
 
-    //持久化保存Foode文件
+    //持久化保存foodList文件
     func saveFoodFile(){
+        //把foodList保存到指定路径
         let success = NSKeyedArchiver.archiveRootObject(foodList, toFile: Food.ArchiveURL.path)
+        //保存不成功的话
         if !success{
             print("Failed ...")
         }
@@ -57,16 +59,22 @@ class FoodListTableViewController: UITableViewController {
     @IBAction func saveToList(segue: UIStoryboardSegue){
         if let addFoodVC = segue.source as? FoodItemViewController{
             if let addFood = addFoodVC.foodForEdit{
+                //如果是修改已有的日记项，则保存新的值
+                //先在数组中修改数据，再传到表格中
                 if let selectedIndexPath = tableView.indexPathForSelectedRow{
                     foodList[(selectedIndexPath as NSIndexPath).row] = addFood
                     tableView.reloadRows(at: [selectedIndexPath], with: .none)
-                }else{
+                }
+                //否则，增加一条值
+                //先在数组中增加数据，再在表格中增加
+                else{
                     foodList.append(addFood)
                     let newIndexPath = IndexPath(row: foodList.count-1, section:0)
                     tableView.insertRows(at: [newIndexPath], with: .automatic)
                 }
             }
         }
+        //持久化保存数据
         saveFoodFile()
     }
     // MARK: - Table view data source
@@ -81,7 +89,7 @@ class FoodListTableViewController: UITableViewController {
         return foodList.count
     }
 
-    
+    //表示图的cell内容
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "foodCell", for: indexPath) as! FoodTableViewCell
         // Configure the cell...
@@ -104,6 +112,7 @@ class FoodListTableViewController: UITableViewController {
 
     
     // Override to support editing the table view.
+    //重写以编辑表示图
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
@@ -135,8 +144,11 @@ class FoodListTableViewController: UITableViewController {
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //页面跳转到item页面之前传数据
+      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //声明一个目标页面的代理
         let descriptionVC = segue.destination as! FoodItemViewController
+        //如果跳转标识符是showDetail，则将当前cell的对应数据传给目标页面
         if(segue.identifier == "showDetail"){
             if let selectedCell = sender as? UITableViewCell{
                 let indexPath = tableView.indexPath(for: selectedCell)!
@@ -145,6 +157,7 @@ class FoodListTableViewController: UITableViewController {
             }
             print("show detail view")
         }
+        //否则，创建一个新的空白对象传给目标页面
         else{
             descriptionVC.foodForEdit = Food(name:"", description:"",foodAvatar: nil)
             print("add new food")

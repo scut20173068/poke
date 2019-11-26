@@ -10,12 +10,13 @@ import Foundation
 import UIKit
 
 class Food: NSObject, NSCoding{
+    //将对象压缩成文件
     func encode(with aCoder: NSCoder) {
         aCoder.encode(foodName, forKey:"nameKey")
         aCoder.encode(foodDescription, forKey:"descriptionKey")
         aCoder.encode(foodAvatar, forKey:"avatarKey")
     }
-    
+    //将文件解压成对象
     required init?(coder aDecoder: NSCoder) {
         foodName = aDecoder.decodeObject(forKey:"nameKey") as? String
         foodDescription = aDecoder.decodeObject(forKey:"descriptionKey") as? String
@@ -28,7 +29,7 @@ class Food: NSObject, NSCoding{
     
     //发现项目的根目录
     static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-    //创建子目录
+    //在项目的根目录下创建子目录
     static let ArchiveURL = DocumentsDirectory.appendingPathComponent("foodList")
     
     init(name: String?, description: String?, foodAvatar: UIImage?){

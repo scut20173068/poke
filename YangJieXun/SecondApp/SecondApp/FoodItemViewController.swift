@@ -9,7 +9,7 @@
 import UIKit
 
 class FoodItemViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-
+    
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var descriptionText: UITextField!
     
@@ -44,7 +44,7 @@ class FoodItemViewController: UIViewController, UINavigationControllerDelegate, 
     
     
     
-    func imagePickerController(_picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
         let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         self.foodImage.image = selectedImage
         dismiss(animated: true, completion: nil)
@@ -53,6 +53,7 @@ class FoodItemViewController: UIViewController, UINavigationControllerDelegate, 
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
+    //跳转到列表页面之前传数据
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
